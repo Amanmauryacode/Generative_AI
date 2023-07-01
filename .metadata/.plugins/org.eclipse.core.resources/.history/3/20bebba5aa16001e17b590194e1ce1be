@@ -1,0 +1,45 @@
+package com.masai.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.masai.DTO.GptResponse;
+import com.masai.service.CustomBotService;
+
+@RestController()
+@RequestMapping("/bot")
+public class CustomBotController {
+
+	@Autowired
+	private CustomBotService botService;
+	
+	@GetMapping("/jokes")
+	public ResponseEntity<GptResponse> jokeGenerator(@RequestParam("prompt") String prompt) {
+		GptResponse resp = botService.getResponse("Hey gpt give joke that is based on "+prompt);
+		return new ResponseEntity<>(resp,HttpStatus.OK);
+	}
+	
+	@GetMapping("/shayari")
+	public ResponseEntity<GptResponse> shayariGenerator(@RequestParam("prompt") String prompt) {
+		GptResponse resp = botService.getResponse("Hey gpt give shayari that is based on "+prompt);
+		return new ResponseEntity<>(resp,HttpStatus.OK);
+	}
+	
+	@GetMapping("/story")
+	public ResponseEntity<GptResponse> storyGenerator(@RequestParam("prompt") String prompt) {
+		GptResponse resp = botService.getResponse("Hey gpt give story that is based on "+prompt);
+		return new ResponseEntity<>(resp,HttpStatus.OK);
+	}
+	
+	@GetMapping("/quote")
+	public ResponseEntity<GptResponse> quoteGenerator(@RequestParam("prompt") String prompt) {
+		GptResponse resp = botService.getResponse("Hey gpt give quote that is based on "+prompt);
+		return new ResponseEntity<>(resp,HttpStatus.OK);
+	}
+	
+}

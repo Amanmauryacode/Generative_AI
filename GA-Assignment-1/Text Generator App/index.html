@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Text Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .form-container {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .output-container {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .output {
+      font-size: 18px;
+      color: #333;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h1>Text Generator</h1>
+    <label for="option">Choose an option:</label>
+    <select id="option">
+      <option value="jokes">Jokes</option>
+      <option value="story">Story</option>
+      <option value="shayari">Shayari</option>
+      <option value="quote">Quote</option>
+    </select>
+    <label for="input-text">Enter your text:</label>
+    <input type="text" id="input-text" placeholder="Type something..." onkeypress="handleKeyPress(event)">
+    <button onclick="generateOutput()">Generate Output</button>
+  </div>
+
+  <div class="output-container">
+    <h2>Output</h2>
+    <div id="output" class="output"></div>
+  </div>
+
+  <script>
+    function generateOutput() {
+      var option = document.getElementById("option").value;
+      var inputText = document.getElementById("input-text").value;
+      var output = document.getElementById("output");
+      
+      fetchs(option,inputText)
+      
+    }
+
+    function fetchs(option,inputText) {
+      
+      output.textContent="loading ..."
+
+      fetch("http://localhost:8080/bot/"+option+"?prompt="+inputText)
+        .then(response => response.text())
+        .then(result => output.textContent=result)
+        .catch(error => console.log('error', error));
+    }
+
+    function handleKeyPress(event) {
+      if (event.keyCode === 13) {
+        generateOutput();
+      }
+    }
+  </script>
+</body>
+
+</html>

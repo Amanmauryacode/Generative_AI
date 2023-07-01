@@ -1,0 +1,14 @@
+package com.masai.DTO;
+
+import java.util.List;
+
+public class GptResponse {
+
+	private List<Choice> choice;
+	
+	public static class Choice{
+		
+		private int index;
+		private Message message;
+	}
+}

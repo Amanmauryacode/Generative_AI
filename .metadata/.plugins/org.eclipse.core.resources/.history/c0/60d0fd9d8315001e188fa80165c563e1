@@ -1,0 +1,22 @@
+package com.masai.DTO;
+
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Request1 {
+
+	private String model;
+	private List<Message> messages;
+	public Request1(String model, List<Message> messages) {
+		this.model = model;
+		this.messages = messages;
+	}
+	
+	
+}
