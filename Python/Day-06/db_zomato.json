@@ -1,0 +1,23 @@
+{
+    "Users": [
+        {
+            "username": "Aman",
+            "email": "aman@gmail.com",
+            "password": 12345,
+            "phone_number": 6306804122
+        },
+        {
+            "username": "Aman",
+            "email": "aman1@gmail.com",
+            "password": 12345,
+            "phone_number": 6306804122
+        }
+    ],
+    "Dish": [],
+    "Orders": [],
+    "Session": [
+        {
+            "email": "aman1@gmail.com"
+        }
+    ]
+}
