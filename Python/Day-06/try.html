@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Form Popup Example</title>
+</head>
+<style>
+    /* Button Styles */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #45a049;
+    }
+
+    /* Form Popup Styles */
+    .form-popup {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .form-container {
+        background-color: #f2f2f2;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 5px;
+    }
+
+    .form-container h2 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-container label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .form-container textarea {
+        height: 100px;
+    }
+
+    .form-container .btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .form-container .btn {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container .btn.cancel {
+        background-color: #f44336;
+    }
+
+    .form-container .btn:hover {
+        background-color: #45a049;
+    }
+
+    .form-container .btn.cancel:hover {
+        background-color: #d32f2f;
+    }
+</style>
+
+<body>
+    <button >Open Form</button>
+
+    
+</body>
+<script>
+    
+</script>
+
+</html>

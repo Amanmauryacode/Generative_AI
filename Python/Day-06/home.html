@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home Page</title>
+
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 200px;
+        background-color: #333;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .navbar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar li {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .navbar li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
+
+    .navbar li a:hover {
+        color: #ffc107;
+    }
+
+    .content {
+        margin-left: 200px;
+        padding: 20px;
+    }
+
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .card {
+        border-radius: 4px;
+        background-color: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-img {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .card h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #333;
+    }
+
+    .card p {
+        margin-bottom: 0;
+        color: #777;
+        line-height: 1.4;
+    }
+
+    /* Button Styles */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #45a049;
+    }
+
+    /* Form Popup Styles */
+    .form-popup {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .form-container {
+        background-color: #f2f2f2;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 5px;
+    }
+
+    .form-container h2 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-container label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .form-container textarea {
+        height: 100px;
+    }
+
+    .form-container .btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .form-container .btn {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container .btn.cancel {
+        background-color: #f44336;
+    }
+
+    .form-container .btn:hover {
+        background-color: #45a049;
+    }
+
+    .form-container .btn.cancel:hover {
+        background-color: #d32f2f;
+    }
+</style>
+
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Orders</a></li>
+            <li><a href="#">Cart</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to our online store</h1>
+
+        <div class="card-container" id="Products">
+
+        </div>
+    </div>
+
+    <div class="form-popup" id="myForm">
+        <form class="form-container">
+            <h2>Edit Form</h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter dish name" required>
+
+            <label for="url">Img URL:</label>
+            <input type="text" id="url" placeholder="Enter dish image URL" required>
+
+            <label for="price">Price:</label>
+            <input type="text" id="price" placeholder="Enter dish price" required>
+
+            <label for="availibility">Availibility:</label>
+            <input type="text" id="availibility" placeholder="Enter dish Availibility(Yes/No)" required>
+
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </div>
+</body>
+<script>
+    const cartData = JSON.parse(localStorage.getItem("items")) || []
+    const container = document.getElementById("Products")
+    const myForm = document.querySelector("form");
+    let id;
+
+    dataFetch()
+    function dataFetch() {
+        fetch("http://127.0.0.1:5000/dish")
+            .then(response => response.json())
+            .then(result => showData(result))
+            .catch(error => console.log('error', error));
+    }
+
+    function showData(data) {
+        container.innerHTML = null;
+        newHtml = data.map((el) => getCard(el.id, el.name, el.imgURL, el.price, el.availibility === "Yes" ? true : false))
+        container.innerHTML = newHtml.join(" ");
+
+        let cartBtn = document.getElementsByClassName("cart");
+        let editBtn = document.getElementsByClassName("edit");
+        let deleteBtn = document.getElementsByClassName("delete");
+
+        for (let btn of cartBtn) {
+            btn.addEventListener("click", (e) => {
+                let rowId = e.target.dataset.id;
+                cartData.push(data[rowId - 1]);
+                localStorage.setItem("items", JSON.stringify(cartData));
+            })
+        }
+        for (let btn of deleteBtn) {
+            btn.addEventListener("click", (e) => {
+                let rowId = e.target.dataset.id;
+                deleteFetch(rowId);
+            })
+        }
+        for (let btn of editBtn) {
+            btn.addEventListener("click", (e) => {
+                let rowId = e.target.dataset.id;
+                item = data[rowId - 1];
+                id = rowId;
+                openForm(item)
+            })
+        }
+    }
+
+    function deleteFetch(id) {
+        var raw = "";
+
+        var requestOptions = {
+            method: 'DELETE',
+            body: raw,
+            redirect: 'follow'
+        };
+        fetch("http://127.0.0.1:5000/remove/" + id, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                alert(result["message"])
+                dataFetch()
+            })
+            .catch(error => console.log('error', error));
+    }
+
+    function updateFetch(raw, id) {
+
+        var requestOptions = {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(raw),
+            redirect: 'follow'
+        };
+
+        fetch("http://127.0.0.1:5000/update/" + id, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                alert(result["message"])
+                dataFetch()
+            })
+            .catch(error => console.log('error', error));
+    }
+
+    function getCard(id, name, imgURL, price, availibility) {
+        return (
+            `
+            <div class="card">
+                <img class="card-img" src="${imgURL}" alt="Product ${id}">
+                <div class="card-content">
+                    <h2>${name}</h2>
+                    <h3>Rs : ${price}</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc feugiat sem at ultrices hendrerit.
+                    </p>
+                </div>
+                <div>
+                    <button class="cart" data-id=${id} ${availibility ? "!disabled" : "disabled"}>Cart</button>
+                    <button class="edit"  data-id=${id}>Edit</button>
+                    <button class="delete" data-id=${id}>Delete</button>
+                </div>
+            </div>
+            `
+        )
+    }
+
+
+    // pop-up form 
+    function openForm(item) {
+        var form = document.getElementById('myForm');
+        form.style.display = 'block';
+
+        // Set initial data
+        var nameInput = document.getElementById('name');
+        var urlInput = document.getElementById('url');
+        var priceInput = document.getElementById('price');
+        var availibilityInput = document.getElementById('availibility');
+
+        nameInput.value = item.name;
+        urlInput.value = item.imgURL;
+        priceInput.value = item.price;
+        availibilityInput.value = item.availibility;
+        // You can set more initial data for other form fields as needed
+    }
+
+    function closeForm() {
+        var form = document.getElementById('myForm');
+        form.style.display = 'none';
+    }
+
+
+    myForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        var nameInput = document.getElementById('name');
+        var urlInput = document.getElementById('url');
+        var priceInput = document.getElementById('price');
+        var availibilityInput = document.getElementById('availibility');
+
+        let obj = {
+            "name": nameInput.value,
+            "imgURL": urlInput.value,
+            "price": priceInput.value,
+            "availibility": availibilityInput.value
+        }
+        updateFetch(obj, id);
+    })
+
+</script>
+
+</html>
