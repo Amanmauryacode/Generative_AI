@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data Table</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 200px;
+        background-color: #333;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .navbar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar li {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .navbar li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
+
+    .navbar li a:hover {
+        color: #ffc107;
+    }
+
+        /* CSS for the table */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="./home.html">Home</a></li>
+            <li><a href="#" onclick="openForm({},'Add Dish')">Add New Dish</a></li>
+            <li><a href="./order.html">Orders</a></li>
+            <li><a href="./cart.html">Cart</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Table to display data -->
+    <div class="container mt-5">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Items</th>
+                    <th>Total Bill</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="data-table"></tbody>
+        </table>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        
+
+        // Fetch data from the API
+        fetch('http://127.0.0.1:5000/orders')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#data-table');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.items.join(", ")}</td>
+            <td>${item.total_bill}</td>
+            <td>${item.status}</td>
+          `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error(error));
+    </script>
+</body>
+
+</html>

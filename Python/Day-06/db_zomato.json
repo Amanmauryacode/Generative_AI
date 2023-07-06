@@ -1,1 +1,48 @@
-{"Users": [{"username": "Aman", "email": "aman@gmail.com", "password": 12345, "phone_number": 6306804122}, {"username": "Aman", "email": "aman1@gmail.com", "password": 12345, "phone_number": 6306804122}], "Dish": [{"name": "Biriyani", "imgURL": "https://healux.in/wp-content/uploads/2020/11/ChickenBiryani.jpg", "price": "350", "availibility": "Yes", "id": 1}, {"name": "Biriyani", "imgURL": "https://healux.in/wp-content/uploads/2020/11/ChickenBiryani.jpg", "price": "350", "availibility": "Yes", "id": 2}, {"name": "Biriyani", "imgURL": "https://healux.in/wp-content/uploads/2020/11/ChickenBiryani.jpg", "price": "350", "availibility": "Yes", "id": 3}], "Orders": [{"name": "Aman", "items": ["Biriyani"], "total_bill": 50, "id": 1, "status": "ready"}], "Session": [{"email": "aman1@gmail.com"}]}
+{
+    "Users": [
+        {
+            "username": "Aman",
+            "email": "aman@gmail.com",
+            "password": 12345,
+            "phone_number": 6306804122
+        },
+        {
+            "username": "Aman",
+            "email": "aman1@gmail.com",
+            "password": 12345,
+            "phone_number": 6306804122
+        }
+    ],
+    "Dish": [
+        {
+            "name": "Biriyani",
+            "imgURL": "https://healux.in/wp-content/uploads/2020/11/ChickenBiryani.jpg",
+            "price": "350",
+            "availibility": "Yes",
+            "id": 1
+        },
+        {
+            "name": "Samosa",
+            "imgURL": "https://www.indianhealthyrecipes.com/wp-content/uploads/2019/11/samosa-recipe.jpg",
+            "price": "10",
+            "availibility": "Yes",
+            "id": 2
+        }
+    ],
+    "Orders": [
+        {
+            "name": "Aman",
+            "items": [
+                "Biriyani","Samosa"
+            ],
+            "total_bill": 50,
+            "id": 1,
+            "status": "ready"
+        }
+    ],
+    "Session": [
+        {
+            "email": "aman1@gmail.com"
+        }
+    ]
+}
