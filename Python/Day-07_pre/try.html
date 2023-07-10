@@ -168,11 +168,22 @@
         // Event listener for chat bot icon to toggle visibility
         chatBotIcon.addEventListener('click', function () {
             chatBotContainer.style.display = 'block';
+            let message =  "Hello customer how i can help you"
+            addBotMessage(message)
+
+            message = "1. View your order status.n"+
+            " 2. Cancel your order."+
+            " 3. other query."
+
+            setTimeout(() => {
+                addBotMessage(message)
+            }, 500);
         });
 
         // Event listener for close button to hide the chat bot
         closeButton.addEventListener('click', function () {
             chatBotContainer.style.display = 'none';
+            chatBotBody.textContent= null;
         });
 
         // Event listener for user input

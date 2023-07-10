@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Registration Page</title>
     <style>
@@ -62,6 +63,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Register</h1>
@@ -91,4 +93,45 @@
         </div>
     </div>
 </body>
+
+<script>
+
+    document.querySelector("form").addEventListener("submit",(e)=>{
+
+        e.preventDefault()
+        let obj = {
+            "username": document.getElementById("username").value,
+            "email": document.getElementById("email").value,
+            "password": document.getElementById("password").value,
+            "phone_number": document.getElementById("phone").value
+        }
+        registerUser(obj);
+    })
+
+    function registerUser(obj) {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify(obj);
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("http://127.0.0.1:5000/register", requestOptions)
+            .then(response => response.json())
+            .then(result =>{
+                alert(result["message"])
+                if (result["message"] == "Successfully registered..."){
+                    window.location.href = "../templates/index.html"
+                }
+
+            })
+            .catch(error => console.log('error', error));
+    }
+</script>
+
 </html>

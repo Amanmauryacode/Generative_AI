@@ -192,43 +192,24 @@
     .form-container .btn.cancel:hover {
         background-color: #d32f2f;
     }
-
-    #orderBtn {
-        font-size: medium;
-        font-weight: 600;
-        padding: 10px 20px;
-        background-color: rgb(58, 85, 240);
-        border: 1px solid rgb(58, 85, 240);
-        color: white;
-        position: fixed;
-        top: 6%;
-        right: 6%;
-    }
-
-    #orderBtn:hover {
-        background-color: rgb(73, 100, 255);
-    }
-
-    #orderBtn:active {
-        background-color: rgba(58, 85, 240, 0.381);
-    }
 </style>
 
 <body>
     <div class="navbar">
         <ul>
-            <li><a href="./home.html">Home</a></li>
+            <li><a href="#">Home</a></li>
             <li><a href="#" onclick="openForm({},'Add Dish')">Add New Dish</a></li>
-            <li><a href="#">Orders</a></li>
+            <li><a href="./order.html">Orders</a></li>
             <li><a href="./cart.html">Cart</a></li>
             <li><a href="#">Logout</a></li>
         </ul>
     </div>
 
     <div class="content">
-        <h1>User Cart</h1>
-        <button id="orderBtn">Order</button>
+        <h1>Welcome to our online store</h1>
+
         <div class="card-container" id="Products">
+
         </div>
     </div>
 
@@ -257,37 +238,85 @@
     const container = document.getElementById("Products")
     const myForm = document.querySelector("form");
     var formName = document.getElementById('form_name');
-
-    var orderBtn = document.getElementById("orderBtn")
     let id;
 
-    showData(cartData)
+    dataFetch()
+    function dataFetch() {
+        fetch("http://127.0.0.1:5000/dish")
+            .then(response => response.json())
+            .then(result => showData(result))
+            .catch(error => console.log('error', error));
+    }
 
     function showData(data) {
         container.innerHTML = null;
-        newHtml = data.map((el, ind) => getCard(ind, el.name, el.imgURL, el.price, el.availibility === "Yes" ? true : false))
+        newHtml = data.map((el) => getCard(el.id, el.name, el.imgURL, el.price, el.availibility === "Yes" ? true : false))
         container.innerHTML = newHtml.join(" ");
 
         let cartBtn = document.getElementsByClassName("cart");
         let editBtn = document.getElementsByClassName("edit");
         let deleteBtn = document.getElementsByClassName("delete");
 
+        for (let btn of cartBtn) {
+            btn.addEventListener("click", (e) => {
+                let rowId = e.target.dataset.id;
+                cartData.push(data[rowId - 1]);
+                localStorage.setItem("items", JSON.stringify(cartData));
+                alert("Add to Cart")
+            })
+        }
         for (let btn of deleteBtn) {
             btn.addEventListener("click", (e) => {
                 let rowId = e.target.dataset.id;
                 deleteFetch(rowId);
             })
         }
-
+        for (let btn of editBtn) {
+            btn.addEventListener("click", (e) => {
+                let rowId = e.target.dataset.id;
+                item = data[rowId - 1];
+                id = rowId;
+                openForm(item, "Update Form")
+            })
+        }
     }
 
     function deleteFetch(id) {
-        cartData.splice(id, 1)
-        localStorage.setItem("items", JSON.stringify(cartData))
-        console.log(cartData)
-        showData(cartData)
+        var raw = "";
+
+        var requestOptions = {
+            method: 'DELETE',
+            body: raw,
+            redirect: 'follow'
+        };
+        fetch("http://127.0.0.1:5000/remove/" + id, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                alert(result["message"])
+                dataFetch()
+            })
+            .catch(error => console.log('error', error));
     }
 
+    function updateFetch(raw, id) {
+
+        var requestOptions = {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(raw),
+            redirect: 'follow'
+        };
+
+        fetch("http://127.0.0.1:5000/update/" + id, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                alert(result["message"])
+                dataFetch()
+            })
+            .catch(error => console.log('error', error));
+    }
 
     function getCard(id, name, imgURL, price, availibility) {
         return (
@@ -301,6 +330,8 @@
                     </p>
                 </div>
                 <div>
+                    <button class="cart" data-id=${id} ${availibility ? "!disabled" : "disabled"}>Cart</button>
+                    <button class="edit"  data-id=${id}>Edit</button>
                     <button class="delete" data-id=${id}>Delete</button>
                 </div>
             </div>
@@ -372,37 +403,6 @@
             .then(result => alert(result["message"]))
             .catch(error => console.log('error', error));
     }
-
-    orderBtn.addEventListener("click", () => {
-        if (cartData.length === 0) alert("Cart is empty")
-        else {
-
-            var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-
-            var raw = JSON.stringify({
-                "name": "Beta",
-                "items": cartData.map((el) => {
-                    return el.id
-                }),
-                "status": "ready"
-            });
-
-            var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-            };
-
-            fetch("http://127.0.0.1:5000/neworder", requestOptions)
-                .then(response => response.text())
-                .then(result => alert(result))
-                .catch(error => console.log('error', error));
-
-            localStorage.setItem("items", JSON.stringify([]))
-        }
-    })
 </script>
 
 </html>

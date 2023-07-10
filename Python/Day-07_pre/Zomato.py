@@ -1,6 +1,6 @@
 import json
 from pymongo import MongoClient
-from flask import Flask,abort,jsonify
+from flask import Flask,abort,jsonify,render_template
 from flask import request
 from flask_cors import CORS
 
@@ -41,14 +41,14 @@ def register():
             existing_user = User.find_one({"email":user["email"]})
             
             if existing_user!=None:
-                return f"User exist with email : {user['email']}"
+                return jsonify({"message":"already exists email"})
             
             User.insert_one(newUser)
             return jsonify({"message":"Successfully registered..."})
         except:
             return jsonify({"message":"Incomplete Data"})
     else:
-        abort(400)
+        return render_template("register.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -56,40 +56,30 @@ def login():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            existing_data = readData()
-            verify = False
-            user = {}
-            if len(existing_data["Users"]) !=0:
-                    for row in existing_data["Users"]:
-                        if row["email"] == data["email"] and row["password"] == data["password"]:
-                            verify = True
-                            user = row
-                            break
-
-            if verify and len(existing_data["Session"])!=0 and existing_data["Session"][0]["email"]==data["email"]:
-                user["message"] = "Already login..."
-                return jsonify(user)
-            elif verify:
-                existing_data["Session"].append({"email":user["email"]})
-                writeData(existing_data)
-                user["password"] = "NA"
-                user["message"] = "Successfully login..."
-                return jsonify(user)
-            else: 
-                return jsonify({"message":"Wrong Credential"})
+            existing_user = User.find_one({"email":data["email"]})
+            
+            if existing_user==None:
+                return jsonify({"message":"Wrong Credentials"})
+            elif existing_user["password"] != data["password"]:
+                return jsonify({"message":"Wrong Credentials"})
+                
+            return jsonify({"message":"Successfully login...","name":existing_user["username"]})
+            
         except Exception as e:
             print(str(e))
             return jsonify({"message":"Invalid Credential"})
     else:
-        return jsonify({"message":"fail"})
+        return render_template("index.html")
 
 
 @app.route("/dish",methods=["GET"])
 def getAllDish():
     if request.method== "GET":
         try:
-            data = readData()
-            return jsonify(data["Dish"])
+            projection = {'_id': False}
+            data = Dish.find({},projection)
+            dishData = list(data)
+            return jsonify(dishData)
         except Exception as e:
             print(e)
             return jsonify([])
@@ -147,18 +137,21 @@ def updateDish(id):
 def newOrder():
     try:
         neworder = request.get_json()
-        existing_data = readData()
+        projection = {'_id': False}
+        data = Dish.find({},projection)
+        existing_data = list(data)
+        orderData = Orders.find({},projection)
+        allOrders = list(orderData)
         items = []
         totalBill = 0
         for row in neworder["items"]:
-            items.append(existing_data["Dish"][int(row)-1]["name"])
-            totalBill += int(existing_data["Dish"][int(row)-1]["price"][1:])
+            items.append(existing_data[int(row)-1]["name"])
+            totalBill += int(existing_data[int(row)-1]["price"])
         neworder["items"] = items
         neworder["total_bill"] = totalBill
-        neworder["id"] = len(existing_data["Orders"])+1
+        neworder["id"] = len(allOrders)+1
         neworder["status"] = "preparing"
-        existing_data["Orders"].append(neworder)
-        writeData(existing_data)
+        Orders.insert_one(neworder)
         return jsonify({"message":"Successfully ordered..."})
     except Exception as e:
         print(e)
@@ -184,9 +177,10 @@ def updateOrder(id):
 @app.route("/orders",methods=["GET"])
 def getOrders():
     try:
-        existing_data = readData()
-        print(existing_data["Orders"])
-        return jsonify(existing_data["Orders"])
+        projection = {'_id': False}
+        data = Orders.find({},projection)
+        existing_data = list(data)
+        return jsonify(existing_data)
     except Exception as e:
         print(e)
         return jsonify({"message":"Failed"})

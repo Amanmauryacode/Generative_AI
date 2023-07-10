@@ -192,14 +192,110 @@
     .form-container .btn.cancel:hover {
         background-color: #d32f2f;
     }
+
+    /* Chat bot container */
+    .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #f5f8fd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: none;
+            /* Initially hidden */
+        }
+
+        /* Chat bot header */
+        .chatbot-header {
+            background-color: #0e75b5;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Chat bot header text */
+        .chatbot-header h3 {
+            margin: 0;
+        }
+
+        /* Chat bot body */
+        .chatbot-body {
+            height: 320px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* Chat bot message */
+        .chatbot-message {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        /* Chat bot user message */
+        .chatbot-user-message {
+            background-color: #e0f3ff;
+            text-align: right;
+        }
+
+        /* Chat bot bot message */
+        .chatbot-bot-message {
+            background-color: #ffffff;
+        }
+
+        /* Chat bot input area */
+        .chatbot-input-area {
+            padding: 10px;
+            border-top: 1px solid #e5e5e5;
+            background-color: #f8f8f8;
+        }
+
+        /* Chat bot input field */
+        .chatbot-input-field {
+            width: 100%;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        /* Chat bot circle icon */
+        .chatbot-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #0e75b5;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+        }
+
+        /* Close button */
+        .close-button {
+            font-size: 20px;
+            cursor: pointer;
+        }
 </style>
 
 <body>
     <div class="navbar">
         <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="./home.html">Home</a></li>
             <li><a href="#" onclick="openForm({},'Add Dish')">Add New Dish</a></li>
-            <li><a href="#">Orders</a></li>
+            <li><a href="./order.html">Orders</a></li>
             <li><a href="./cart.html">Cart</a></li>
             <li><a href="#">Logout</a></li>
         </ul>
@@ -231,6 +327,28 @@
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
             <button type="submit" class="btn">Submit</button>
         </form>
+    </div>
+
+    <!-- Chat bot circle icon -->
+    <div class="chatbot-icon">
+        <span>&#x1F5E8;</span>
+    </div>
+
+    <!-- Chat bot container -->
+    <div class="chatbot-container">
+        <!-- Chat bot header -->
+        <div class="chatbot-header">
+            <h3>Chat Bot</h3>
+            <span class="close-button">&#x2716;</span>
+        </div>
+        <!-- Chat bot body -->
+        <div class="chatbot-body">
+            <!-- Chat botmessages will be dynamically added here -->
+        </div>
+        <!-- Chat bot input area -->
+        <div class="chatbot-input-area">
+            <input type="text" class="chatbot-input-field" placeholder="Type your message here">
+        </div>
     </div>
 </body>
 <script>
@@ -405,4 +523,56 @@
     }
 </script>
 
+<script>
+    // Get the chat bot elements
+    var chatBotContainer = document.querySelector('.chatbot-container');
+    var chatBotIcon = document.querySelector('.chatbot-icon');
+    var closeButton = chatBotContainer.querySelector('.close-button');
+    var chatBotHeader = chatBotContainer.querySelector('.chatbot-header');
+    var chatBotBody = chatBotContainer.querySelector('.chatbot-body');
+    var chatBotInput = chatBotContainer.querySelector('.chatbot-input-field');
+
+    // Function to add a user message to the chat bot
+    function addUserMessage(message) {
+        var userMessageElement = document.createElement('div');
+        userMessageElement.className = 'chatbot-message chatbot-user-message';
+        userMessageElement.textContent = message;
+        chatBotBody.appendChild(userMessageElement);
+        chatBotBody.scrollTop = chatBotBody.scrollHeight;
+    }
+
+    // Function to add a bot message to the chat bot
+    function addBotMessage(message) {
+        var botMessageElement = document.createElement('div');
+        botMessageElement.className = 'chatbot-message chatbot-bot-message';
+        botMessageElement.textContent = message;
+        chatBotBody.appendChild(botMessageElement);
+        chatBotBody.scrollTop = chatBotBody.scrollHeight;
+    }
+
+    // Function to handle user input
+    // Function to handle user input
+    function handleUserInput(event) {
+        if (event.key === 'Enter') {
+            var userInput = chatBotInput.value;
+            addUserMessage(userInput);
+            addBotMessage(userInput); // Respond with the same message
+            chatBotInput.value = '';
+        }
+    }
+
+
+    // Event listener for chat bot icon to toggle visibility
+    chatBotIcon.addEventListener('click', function () {
+        chatBotContainer.style.display = 'block';
+    });
+
+    // Event listener for close button to hide the chat bot
+    closeButton.addEventListener('click', function () {
+        chatBotContainer.style.display = 'none';
+    });
+
+    // Event listener for user input
+    chatBotInput.addEventListener('keydown', handleUserInput);
+</script>
 </html>
